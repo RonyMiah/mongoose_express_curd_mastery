@@ -1,4 +1,4 @@
-//all busness logic in here
+//All busness logic in here
 
 import { Person } from './person.interface'
 import { PersonModel } from './person.model'

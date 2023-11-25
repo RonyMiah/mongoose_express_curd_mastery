@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose'
-import { Address, Order, Person } from './person.interface'
+import { Address, FullName, Order, Person } from './person.interface'
 
 const AddressSchema = new Schema<Address>({
   street: {
@@ -22,6 +22,17 @@ const OrderShema = new Schema<Order>({
   quantity: { type: Number, required: true },
 })
 
+const FullName = new Schema<FullName>({
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
+})
+
 const personSchema = new Schema<Person>({
   userId: {
     type: Number,
@@ -38,14 +49,9 @@ const personSchema = new Schema<Person>({
     required: true,
   },
   fullName: {
-    firstName: {
-      type: String,
-      required: true,
-    },
-    lastName: {
-      type: String,
-      required: true,
-    },
+    type: FullName,
+    required: true,
+    // trim: true,
   },
   age: {
     type: Number,
@@ -58,6 +64,7 @@ const personSchema = new Schema<Person>({
   isActive: {
     type: Boolean,
     required: true,
+    default: true,
   },
   hobbies: {
     type: [String],
