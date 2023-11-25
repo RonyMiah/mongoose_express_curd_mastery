@@ -66,7 +66,7 @@ const personSchema = new Schema<TPerson>({
   isActive: {
     type: Boolean,
     required: true,
-    default: true,
+    default: false,
   },
   hobbies: {
     type: [String],
@@ -78,6 +78,10 @@ const personSchema = new Schema<TPerson>({
   },
   orders: {
     type: [OrderShema],
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -94,14 +98,20 @@ personSchema.pre('save', async function (next) {
 
 //password don't response
 personSchema.post('save', async function (doc, next) {
-  doc.password = ''
+  doc.password = ' '
   next()
 })
 
-//custom instance methode
-// personSchema.methods.isUserExists = async function (id: string) {
-//   const existingUser = await Person.findOne({ id })
-//   return existingUser
-// }
+//Query Middleware
+
+personSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } })
+  next()
+})
+personSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } })
+  next()
+})
+
 
 export const Person = model<TPerson>('Person', personSchema)

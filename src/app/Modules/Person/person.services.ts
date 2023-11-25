@@ -9,19 +9,37 @@ const createPersonFromDB = async (person: TPerson) => {
 }
 
 const getAllPersonFromDB = async () => {
-  const result = await Person.find()
+  const result = await Person.aggregate([
+    //stage-1
+    {
+      $project: {
+        _id: 0,
+        userId: 0,
+        password: 0,
+        isActive: 0,
+        hobbies: 0,
+        isDeleted: 0,
+        orders: 0,
+        fullName: {
+          _id: 0,
+        },
+        address: {
+          _id: 0,
+        },
+        __v: 0,
+      },
+    },
+  ])
   return result
 }
 
 const getSinglePersonFromDB = async (userId: string) => {
   const result = await Person.findOne({ userId })
+  return result
+}
 
-  // const person = new Person(userId)
-  // if (await person.isUserExists(userId)) {
-  //   throw new Error('User Already Exists !')
-  // }
-  // const result = await person.get(userId)
-
+const deletePersonFromDB = async (id: string) => {
+  const result = await Person.updateOne({ id }, { isDeleted: true })
   return result
 }
 
@@ -29,4 +47,5 @@ export const personServices = {
   createPersonFromDB,
   getAllPersonFromDB,
   getSinglePersonFromDB,
+  deletePersonFromDB,
 }

@@ -1,5 +1,3 @@
-
-
 export type TAddress = {
   street: 'string'
   city: 'string'
@@ -27,13 +25,7 @@ export type TPerson = {
   hobbies: string[]
   address: TAddress
   orders?: TOrder[]
+  isDeleted?: boolean
 }
 
 
-
-//for creating instance 
-// export type personMethods = {
-//   isUserExists(id: string): Promise<TPerson | null>
-// }
-
-// export type PersonModel = Model<TPerson, Record<string, never>, personMethods>

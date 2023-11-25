@@ -28,6 +28,7 @@ const personValidationSchema = Joi.object({
   hobbies: Joi.array().items(Joi.string()).required(),
   address: addressValidationSchema.required(),
   orders: Joi.array().items(orderValidationSchema),
+  isDeleted: Joi.boolean,
 })
 
 export default personValidationSchema
