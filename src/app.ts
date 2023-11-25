@@ -7,10 +7,8 @@ const app: Application = express()
 app.use(express.json())
 app.use(cors())
 
-
-//application route 
+//application route
 app.use('/', personRoute)
-
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!')
