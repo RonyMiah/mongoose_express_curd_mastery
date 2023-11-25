@@ -5,4 +5,7 @@ const router = express.Router()
 
 //will call controller function
 
-router.get('/api/users', personController.createPerson)
+router.post('/api/users', personController.createPerson)
+
+//we know that router is an object thats why we export easyly.
+export const personRoute = router

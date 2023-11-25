@@ -69,7 +69,6 @@ const personSchema = new Schema<Person>({
   },
   orders: {
     type: [OrderShema],
-    required: true,
   },
 })
 
