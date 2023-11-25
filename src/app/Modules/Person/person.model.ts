@@ -1,7 +1,9 @@
 import { Schema, model } from 'mongoose'
-import { Address, FullName, Order, Person } from './person.interface'
+import { TAddress, TFullName, TOrder, TPerson } from './person.interface'
+import bcrypt from 'bcrypt'
+import config from '../../config'
 
-const AddressSchema = new Schema<Address>({
+const AddressSchema = new Schema<TAddress>({
   street: {
     type: String,
     required: true,
@@ -16,13 +18,13 @@ const AddressSchema = new Schema<Address>({
   },
 })
 
-const OrderShema = new Schema<Order>({
+const OrderShema = new Schema<TOrder>({
   productName: { type: String, required: true },
   price: { type: Number, required: true },
   quantity: { type: Number, required: true },
 })
 
-const FullName = new Schema<FullName>({
+const FullName = new Schema<TFullName>({
   firstName: {
     type: String,
     required: true,
@@ -33,7 +35,7 @@ const FullName = new Schema<FullName>({
   },
 })
 
-const personSchema = new Schema<Person>({
+const personSchema = new Schema<TPerson>({
   userId: {
     type: Number,
     required: true,
@@ -79,4 +81,27 @@ const personSchema = new Schema<Person>({
   },
 })
 
-export const PersonModel = model<Person>('Person', personSchema)
+//hash password
+personSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bycript_salt_round),
+  )
+  next()
+})
+
+//password don't response
+personSchema.post('save', async function (doc, next) {
+  doc.password = ''
+  next()
+})
+
+//custom instance methode
+// personSchema.methods.isUserExists = async function (id: string) {
+//   const existingUser = await Person.findOne({ id })
+//   return existingUser
+// }
+
+export const Person = model<TPerson>('Person', personSchema)

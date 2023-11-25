@@ -1,20 +1,27 @@
 //All busness logic in here
 
-import { Person } from './person.interface'
-import { PersonModel } from './person.model'
+import { TPerson } from './person.interface'
+import { Person } from './person.model'
 
-const createPersonFromDB = async (person: Person) => {
-  const result = await PersonModel.create(person)
+const createPersonFromDB = async (person: TPerson) => {
+  const result = await Person.create(person)
   return result
 }
 
 const getAllPersonFromDB = async () => {
-  const result = await PersonModel.find()
+  const result = await Person.find()
   return result
 }
 
 const getSinglePersonFromDB = async (userId: string) => {
-  const result = await PersonModel.findOne({ userId })
+  const result = await Person.findOne({ userId })
+
+  // const person = new Person(userId)
+  // if (await person.isUserExists(userId)) {
+  //   throw new Error('User Already Exists !')
+  // }
+  // const result = await person.get(userId)
+
   return result
 }
 
