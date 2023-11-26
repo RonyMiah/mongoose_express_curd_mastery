@@ -105,6 +105,68 @@ const getOrderPersonFromDB = async (userId: string) => {
   }
 }
 
+const totalPriceOrderForSpecificUserFromDB = async (userId: string) => {
+  const person = await Person.isUserExists(userId)
+  if (person) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const find: any = await Person.findOne({
+      userId,
+    }).select('_id')
+
+    const singlePersonData = await Person.aggregate([
+      // stage -1
+      {
+        $match: {
+          _id: {
+            $in: [find._id],
+          },
+        },
+      },
+
+      //stage -2
+      { $unwind: '$orders' },
+
+      //stage -3 Multiply
+      {
+        $project: {
+          orders: 1,
+          total: {
+            $multiply: ['$orders.quantity', '$orders.price'],
+          },
+        },
+      },
+      //stage -4
+      {
+        $group: {
+          _id: 'orders.price',
+          totalPrice: {
+            $sum: { $sum: '$total' },
+          },
+        },
+      },
+      //stage -5
+
+      {
+        $group: {
+          _id: '$_id._id',
+          totalPrice: {
+            $sum: { $sum: '$totalPrice' },
+          },
+        },
+      },
+
+      //stage -6
+
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+    ])
+    return singlePersonData
+  }
+}
+
 export const personServices = {
   createPersonFromDB,
   getAllPersonFromDB,
@@ -113,4 +175,5 @@ export const personServices = {
   updateSinglePersonFromDB,
   createOrderPrsonFromDB,
   getOrderPersonFromDB,
+  totalPriceOrderForSpecificUserFromDB,
 }
