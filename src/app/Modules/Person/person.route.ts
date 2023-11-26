@@ -3,7 +3,7 @@ import { personController } from './person.controller'
 
 const router = express.Router()
 
-//will call controller function
+//Router will call controller function
 
 router.post('/api/users', personController.createPerson)
 router.get('/api/users', personController.getAllPerson)

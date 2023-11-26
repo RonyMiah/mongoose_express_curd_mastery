@@ -7,8 +7,7 @@ const createPerson = async (req: Request, res: Response) => {
     const person = req.body
     //data validation using joi
     const { error, value } = personValidationSchema.validate(person)
-
-    //send data to db
+    //send data into db
     const result = await personServices.createPersonFromDB(value)
 
     if (error) {
@@ -18,7 +17,7 @@ const createPerson = async (req: Request, res: Response) => {
         error: error.details,
       })
     }
-    //send response
+    //send Success response
     res.status(200).json({
       success: true,
       message: 'User created successfully!',
@@ -26,6 +25,7 @@ const createPerson = async (req: Request, res: Response) => {
     })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
+    //send error response
     res.status(500).json({
       success: false,
       message: error.message || 'Some went to be wrong',
@@ -37,6 +37,7 @@ const createPerson = async (req: Request, res: Response) => {
 const getAllPerson = async (req: Request, res: Response) => {
   try {
     const result = await personServices.getAllPersonFromDB()
+    // send success response
     res.status(200).json({
       success: true,
       message: 'User fetched successfully!',
@@ -44,6 +45,7 @@ const getAllPerson = async (req: Request, res: Response) => {
     })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
+    //send error response
     res.status(500).json({
       success: false,
       message: error.message || 'Some went to be wrong',
@@ -56,6 +58,7 @@ const getSingleperson = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params
     const result = await personServices.getSinglePersonFromDB(userId)
+    //send Success Response
     res.status(200).json({
       success: true,
       message: 'Single User fetched successfully!',
@@ -63,6 +66,7 @@ const getSingleperson = async (req: Request, res: Response) => {
     })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
+    //send Error Response
     res.status(404).json({
       success: false,
       message: err.message || 'User not found',
@@ -82,6 +86,7 @@ const updateSinglePerson = async (req: Request, res: Response) => {
       userId,
       bodyData,
     )
+    //send Success Response
     res.status(200).json({
       success: true,
       message: 'User updated successfully!',
@@ -89,6 +94,7 @@ const updateSinglePerson = async (req: Request, res: Response) => {
     })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
+    //send error response
     res.status(404).json({
       success: false,
       message: err.message || 'User not found',
@@ -104,6 +110,7 @@ const deletePerson = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params
     const result = await personServices.deleteSinglePersonFromDB(userId)
+    // send Success Response
     res.status(200).json({
       success: true,
       message: 'User Deleted successfully!',

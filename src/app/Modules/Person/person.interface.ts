@@ -30,8 +30,7 @@ export type TPerson = {
   isDeleted?: boolean
 }
 
-//for creating static
-
+//for creating static interface
 export interface PersonModel extends Model<TPerson> {
   // eslint-disable-next-line no-unused-vars
   isUserExists(id: string): Promise<TPerson | null>

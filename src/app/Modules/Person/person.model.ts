@@ -91,7 +91,7 @@ const personSchema = new Schema<TPerson, PersonModel>({
   },
 })
 
-//hash password
+//Hash password before save database using bcrypt
 personSchema.pre('save', async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this
@@ -102,14 +102,13 @@ personSchema.pre('save', async function (next) {
   next()
 })
 
-//password don't response
+//password response empty string
 personSchema.post('save', async function (doc, next) {
   doc.password = ' '
   next()
 })
 
-//Query Middleware
-
+//Query Middleware use for added isDeleted
 personSchema.pre('find', function (next) {
   this.find({ isDeleted: { $ne: true } })
   next()
@@ -119,8 +118,7 @@ personSchema.pre('findOne', function (next) {
   next()
 })
 
-//creating a custom static Methode
-
+//Create a custom static Methode
 personSchema.statics.isUserExists = async function (userId: string) {
   const person = await Person.findOne({ userId }).select(
     '-_id -__v -password -order -isDeleted -fullName._id -address._id -orders ',

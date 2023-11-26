@@ -1,4 +1,4 @@
-//All busness logic in here
+//All busness logic Code in here
 
 import { TOrder, TPerson } from './person.interface'
 import { Person } from './person.model'
@@ -50,8 +50,8 @@ const getAllPersonFromDB = async () => {
 }
 
 const getSinglePersonFromDB = async (userId: string) => {
-  const isExist = await Person.isUserExists(userId)
-  return isExist
+  const person = await Person.isUserExists(userId)
+  return person
 }
 
 const updateSinglePersonFromDB = async (userId: string, bodyData: TPerson) => {
@@ -59,7 +59,7 @@ const updateSinglePersonFromDB = async (userId: string, bodyData: TPerson) => {
   if (person) {
     const personresponse = await Person.findOneAndUpdate(
       { userId },
-      { ...bodyData }, // Update
+      { ...bodyData }, // Updated  Document and using spredoperator
       { new: true }, // Return the modified document
     ).select(
       '-_id -__v -password -orders -isDeleted -fullName._id -address._id',
@@ -100,7 +100,6 @@ const getOrderPersonFromDB = async (userId: string) => {
     const result = await Person.findOne({ userId }).select(
       '-orders._id -_id -userName -age -address -isDeleted -isActive -fullName -username -userId -password -email -hobbies -__v',
     )
-
     return result
   }
 }
@@ -151,7 +150,7 @@ const totalPriceOrderForSpecificUserFromDB = async (userId: string) => {
           },
         },
       },
-      //stage -6
+      //stage -6 remove _id using project
       {
         $project: {
           _id: 0,
