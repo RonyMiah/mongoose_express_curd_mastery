@@ -123,7 +123,7 @@ personSchema.pre('findOne', function (next) {
 
 personSchema.statics.isUserExists = async function (userId: string) {
   const person = await Person.findOne({ userId }).select(
-    '-_id -__v -password -order -isDeleted -fullName._id -address._id -isActive -hobbies -orders -userId',
+    '-_id -__v -password -order -isDeleted -fullName._id -address._id -orders ',
   )
   if (!person) {
     throw {

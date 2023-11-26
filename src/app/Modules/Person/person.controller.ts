@@ -2,7 +2,6 @@ import { Request, Response } from 'express'
 import { personServices } from './person.services'
 import personValidationSchema from './person.validation'
 
-
 const createPerson = async (req: Request, res: Response) => {
   try {
     const person = req.body
@@ -29,7 +28,7 @@ const createPerson = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: 'Some went to be wrong',
+      message: error.message || 'Some went to be wrong',
       error: error,
     })
   }
@@ -40,14 +39,14 @@ const getAllPerson = async (req: Request, res: Response) => {
     const result = await personServices.getAllPersonFromDB()
     res.status(200).json({
       success: true,
-      message: 'All User fetched successfully!',
+      message: 'User fetched successfully!',
       data: result,
     })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: 'Some went to be wrong',
+      message: error.message || 'Some went to be wrong',
       error: error,
     })
   }
@@ -64,31 +63,47 @@ const getSingleperson = async (req: Request, res: Response) => {
     })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
-    res.status(500).json({
+    res.status(404).json({
       success: false,
-      message: 'User not found',
+      message: err.message || 'User not found',
       error: {
-        code: 500,
+        code: 404,
         description: 'User not found!',
       },
     })
   }
 }
 
-// const updatePerson = async (req: Request, res: Response) => {
-//   try {
-//     const { userId } = req.params
-//     const body = req.body
-  
-//     const result = await personServices.
-
-//   } catch (error) {}
-// }
+const updateSinglePerson = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params
+    const bodyData = req.body
+    const result = await personServices.updateSinglePersonFromDB(
+      userId,
+      bodyData,
+    )
+    res.status(200).json({
+      success: true,
+      message: 'User updated successfully!',
+      data: result,
+    })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    res.status(404).json({
+      success: false,
+      message: err.message || 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    })
+  }
+}
 
 const deletePerson = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params
-    const result = await personServices.deletePersonFromDB(userId)
+    const result = await personServices.deleteSinglePersonFromDB(userId)
     res.status(200).json({
       success: true,
       message: 'User Deleted successfully!',
@@ -96,11 +111,36 @@ const deletePerson = async (req: Request, res: Response) => {
     })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
-    res.status(500).json({
+    res.status(404).json({
       success: false,
       message: err.message || 'User not found',
       error: {
-        code: 500,
+        code: 404,
+        description: 'User not found!',
+      },
+    })
+  }
+}
+
+//Bonus Section(10 marks)
+
+const createOrderPerson = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params
+    const body = req.body
+    const result = await personServices.createOrderPrsonFromDB(userId, body)
+    res.status(200).json({
+      success: true,
+      message: 'Order created successfully!',
+      data: result,
+    })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    res.status(404).json({
+      success: false,
+      message: err.message || 'User not found',
+      error: {
+        code: 404,
         description: 'User not found!',
       },
     })
@@ -112,4 +152,6 @@ export const personController = {
   getAllPerson,
   getSingleperson,
   deletePerson,
+  updateSinglePerson,
+  createOrderPerson,
 }
