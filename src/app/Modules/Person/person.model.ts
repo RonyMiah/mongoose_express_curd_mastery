@@ -1,5 +1,11 @@
 import { Schema, model } from 'mongoose'
-import { TAddress, TFullName, TOrder, TPerson } from './person.interface'
+import {
+  PersonModel,
+  TAddress,
+  TFullName,
+  TOrder,
+  TPerson,
+} from './person.interface'
 import bcrypt from 'bcrypt'
 import config from '../../config'
 
@@ -35,7 +41,7 @@ const FullName = new Schema<TFullName>({
   },
 })
 
-const personSchema = new Schema<TPerson>({
+const personSchema = new Schema<TPerson, PersonModel>({
   userId: {
     type: Number,
     required: true,
@@ -113,5 +119,23 @@ personSchema.pre('findOne', function (next) {
   next()
 })
 
+//creating a custom static Methode
 
-export const Person = model<TPerson>('Person', personSchema)
+personSchema.statics.isUserExists = async function (userId: string) {
+  const person = await Person.findOne({ userId }).select(
+    '-_id -__v -password -order -isDeleted -fullName._id -address._id -isActive -hobbies -orders -userId',
+  )
+  if (!person) {
+    throw {
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    }
+  }
+  return person
+}
+
+export const Person = model<TPerson, PersonModel>('Person', personSchema)

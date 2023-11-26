@@ -5,7 +5,23 @@ import { Person } from './person.model'
 
 const createPersonFromDB = async (person: TPerson) => {
   const result = await Person.create(person)
-  return result
+  return {
+    userId: result.userId,
+    username: result.username,
+    fullName: {
+      firstName: result.fullName.firstName,
+      lastName: result.fullName.lastName,
+    },
+    age: result.age,
+    email: result.email,
+    isActive: result.isActive,
+    hobbies: result.hobbies,
+    address: {
+      street: result.address.street,
+      city: result.address.city,
+      country: result.address.country,
+    },
+  }
 }
 
 const getAllPersonFromDB = async () => {
@@ -34,8 +50,8 @@ const getAllPersonFromDB = async () => {
 }
 
 const getSinglePersonFromDB = async (userId: string) => {
-  const result = await Person.findOne({ userId })
-  return result
+  const isExist = await Person.isUserExists(userId)
+  return isExist
 }
 
 const deletePersonFromDB = async (id: string) => {

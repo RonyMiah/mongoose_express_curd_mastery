@@ -1,3 +1,5 @@
+import { Model } from 'mongoose'
+
 export type TAddress = {
   street: 'string'
   city: 'string'
@@ -28,4 +30,9 @@ export type TPerson = {
   isDeleted?: boolean
 }
 
+//for creating static
 
+export interface PersonModel extends Model<TPerson> {
+  // eslint-disable-next-line no-unused-vars
+  isUserExists(id: string): Promise<TPerson | null>
+}
