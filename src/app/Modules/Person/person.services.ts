@@ -94,6 +94,17 @@ const createOrderPrsonFromDB = async (userId: string, body: TOrder) => {
   return null
 }
 
+const getOrderPersonFromDB = async (userId: string) => {
+  const person = await Person.isUserExists(userId)
+  if (person) {
+    const result = await Person.findOne({ userId }).select(
+      '-orders._id -_id -userName -age -address -isDeleted -isActive -fullName -username -userId -password -email -hobbies -__v',
+    )
+
+    return result
+  }
+}
+
 export const personServices = {
   createPersonFromDB,
   getAllPersonFromDB,
@@ -101,4 +112,5 @@ export const personServices = {
   deleteSinglePersonFromDB,
   updateSinglePersonFromDB,
   createOrderPrsonFromDB,
+  getOrderPersonFromDB,
 }
