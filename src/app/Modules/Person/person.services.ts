@@ -122,10 +122,8 @@ const totalPriceOrderForSpecificUserFromDB = async (userId: string) => {
           },
         },
       },
-
       //stage -2
       { $unwind: '$orders' },
-
       //stage -3 Multiply
       {
         $project: {
@@ -135,7 +133,7 @@ const totalPriceOrderForSpecificUserFromDB = async (userId: string) => {
           },
         },
       },
-      //stage -4
+      //stage -4 Sum Total
       {
         $group: {
           _id: 'orders.price',
@@ -144,8 +142,7 @@ const totalPriceOrderForSpecificUserFromDB = async (userId: string) => {
           },
         },
       },
-      //stage -5
-
+      //stage -5 Sum Total Price
       {
         $group: {
           _id: '$_id._id',
@@ -154,9 +151,7 @@ const totalPriceOrderForSpecificUserFromDB = async (userId: string) => {
           },
         },
       },
-
       //stage -6
-
       {
         $project: {
           _id: 0,

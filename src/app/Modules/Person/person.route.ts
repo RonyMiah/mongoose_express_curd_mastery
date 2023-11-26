@@ -12,9 +12,6 @@ router.put('/api/users/:userId', personController.updateSinglePerson)
 router.delete('/api/users/:userId', personController.deletePerson)
 router.put('/api/users/:userId/orders', personController.createOrderPerson)
 router.get('/api/users/:userId/orders', personController.getOrderPerson)
-router.get(
-  '/api/users/:userId/orders/total-price',
-  personController.totalPriceSumOrders,
-)
+router.get('/api/users/:userId/orders/total-price',personController.totalPriceSumOrders)
 
 export const personRoute = router
